@@ -1,4 +1,123 @@
-# rizou
-hello from Nabeul
-Hello from ras jbal
-hello from gorjani  
+(config)# hostname Nomswitch
+(config)# no ip domain-lookup  DNS deactivate
+(config)# enable secret class  mdp mode priv
+(config)# line console 0
+          password Cisco      mdp console
+          login
+(config)# line vty 0 4
+          password Cisco      mdp VTY (5 sessions)
+          login
+(config)#banner motd # hhhhh #   
+(config)#copy running-config startup-config ou write memory ou wr  sauvegarde
+
+
+(config)#show vlan brief 
+
+
+Sw_Etage1(config)# vlan 10
+Sw_Etage1(config-vlan)# name Etudiant      creation de vlan
+Sw_Etage1(config-vlan)# vlan 20
+Sw_Etage1(config-vlan)# name Enseignant
+
+(config)# no vlan vlan_id supression de vlan
+
+
+Sw_Etage1(config)# interface fa0/3
+Sw_Etage1(config-if)# switchport mode access
+Sw_Etage1(config-if)# switchport access vlan 20     
+Sw_Etage1(config-if)# end 
+
+
+ Configuration de l’interface SVI du switch Sw_Etage1
+Sw_Etage1(config-if)# interface vlan 99
+Sw_Etage1(config-if)# ip address 192.168.99.2 255.255.255.0
+Sw_Etage1(config-if)# no shutdown
+Sw_Etage1(config-if)# end
+
+Sw_Etage1(config)# interface fa0/1
+Sw_Etage1(config-if)# switchport mode trunk
+Sw_Etage1(config-if)# switchport trunk native vlan 80
+Sw_Etage1(config-if)# switchport trunk allowed vlan <list de vlan>
+Sw_Etage1(config-if)# end
+
+
+Inter-VLAN routing :Nécessite un routeur ou un switch de niveau 3 (multilayer switch).
+
+Communication intra-VLAN et inter-VLAN :
+
+Intra-VLAN : Les hôtes communiquent s’ils appartiennent au même VLAN et au même sous-réseau.
+Inter-VLAN : Nécessite un routage pour relier les VLANs.
+
+show interfaces trunk 
+
+Sw_Etage1(config)#ip default-gateway 192.168.99.1 
+
+DGW(config)#interface G0/0.<le numero du vlan>  create a subinterface
+
+DGW(config-subif)#encapsulation dot1q <99>  associe la sous-interface au VLAN 99
+
+DGW(config-subif)#ip address 192.168.20.1 255.255.255.0
+
+Activez l'interface G0/0.
+DGW(config)#interface G0/0
+DGW(config-if)#no shutdown
+
+
+Le test de connectivité réussi entre PC1 et PC2, même s'ils sont sur des VLANs différents, est dû au fait que :
+
+Le routage inter-VLAN est configuré sur le routeur via des sous-interfaces.
+Le switch utilise l'encapsulation dot1q pour permettre le passage de plusieurs VLANs sur un même lien trunk.
+Les interfaces physiques et sous-interfaces sont correctement activées et fonctionnent.
+
+clockrate  120000
+DTE ou DCE est :show controllers
+
+show ip interface brief
+show running-config
+
+show interfaces
+show ip interface
+
+:::
+show ip interface brief
+@recap
+@flottante
+2) Route statique par défaut : sur WAN
+- ip route  0.0.0.0  0.0.0.0 [1/0] via 1
+3) Route statique récapitulative : aggrégation de routes : Le Supernetting
+- R2(config) # ip route 172.20.0.0. 255.252.0.0 S0/0/0
+4) Route statique flottante : 
+- R2(config) # ip route 172.20.0.0. 255.252.0.0 S0/0/0 3:metric
+		- R3(config)#ip route 0.0.0.0 0.0.0.0 se2/0 5
+
+protocole : destination: da:cout via prochain saut : interface de sortie
+
+
+Équilibrage de charge : Utilisation égale de plusieurs chemins lorsque leurs métriques sont égales.
+Convergence du routeur : Mise à jour des chemins optimaux dans la table de routage.
+Convergence du réseau : Synchronisation de tous les routeurs d'un réseau avec les informations les plus récentes.
+
+
+-	Show ip ospf neighbor 
+-	Show ip ospf : affichage des informations relatives à tous les autres routeurs
+-	Show ip route : affichage table de routage
+-	Show ip ospf database : affichage de bd de tous les routeurs
+
+R6(config)#router ospf 1
+R6(config-router)#network 172.16.2.0 0.0.0.3 area 0
+
+
+rendre le routeur R6 une
+passerelle du dernier recours pour les utilisateurs de LAN3
+R6(config)#router ospf 1
+R6(config-router)#default-information originate
+
+Configurer la minimisation de la charge du réseau par les mises à jour OSPF inutiles.
+interface physique en une interface logique
+
+R6(config)#router ospf 1
+R6(config-router)#passive-interface f1/0
+
+
+
+
